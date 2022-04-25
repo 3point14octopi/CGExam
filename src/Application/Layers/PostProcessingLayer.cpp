@@ -44,6 +44,7 @@ void PostProcessingLayer::OnAppLoad(const nlohmann::json& config)
 	GetEffect<OutlineEffect>()->Enabled = false;
 	GetEffect<Pixelation>()->Enabled = false;
 	GetEffect<NightVision>()->Enabled = false;
+	GetEffect<DepthOfField>()->Enabled = false;
 
 	Application& app = Application::Get();
 	const glm::uvec4& viewport = app.GetPrimaryViewport();
