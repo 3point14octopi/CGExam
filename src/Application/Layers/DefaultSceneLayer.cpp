@@ -110,7 +110,7 @@ void DefaultSceneLayer::_CreateScene()
 
 
 		// Load in the meshes
-		MeshResource::Sptr monkeyMesh = ResourceManager::CreateAsset<MeshResource>("Monkey.obj");
+		MeshResource::Sptr monkeyMesh = ResourceManager::CreateAsset<MeshResource>("Models/Monkey.obj");
 
 		// Load in some textures
 		Texture2D::Sptr    monkeyTex    = ResourceManager::CreateAsset<Texture2D>("textures/monkey-uvMap.png");
