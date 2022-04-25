@@ -1,4 +1,6 @@
 #include "DefaultSceneLayer.h"
+#pragma region Includes
+
 
 // GLM math library
 #include <GLM/glm.hpp>
@@ -76,6 +78,7 @@
 #include "Application/Windows/DebugWindow.h"
 #include "Gameplay/Components/ShadowCamera.h"
 #include "Gameplay/Components/ShipMoveBehaviour.h"
+#pragma endregion
 
 DefaultSceneLayer::DefaultSceneLayer() :
 	ApplicationLayer()
@@ -116,6 +119,9 @@ void DefaultSceneLayer::_CreateScene()
 
 		// Load in the meshes
 		MeshResource::Sptr monkeyMesh = ResourceManager::CreateAsset<MeshResource>("Models/Monkey.obj");
+		MeshResource::Sptr darkBrickMesh = ResourceManager::CreateAsset<MeshResource>("Models/DarkBricks.obj");
+		MeshResource::Sptr lightBrickMesh = ResourceManager::CreateAsset<MeshResource>("Models/LightBricks.obj");
+		MeshResource::Sptr platformMesh = ResourceManager::CreateAsset<MeshResource>("Models/Platform.obj");
 
 #pragma endregion
 #pragma region LoadTextures
@@ -132,6 +138,12 @@ void DefaultSceneLayer::_CreateScene()
 		Texture2D::Sptr    monkeyTex    = ResourceManager::CreateAsset<Texture2D>("textures/monkey-uvMap.png");
 		Texture2D::Sptr    boxTex = ResourceManager::CreateAsset<Texture2D>("textures/box-diffuse.png");
 		Texture2D::Sptr    smileyTex = ResourceManager::CreateAsset<Texture2D>("textures/light_projection.png");
+		Texture2D::Sptr    lightBrickTex = ResourceManager::CreateAsset<Texture2D>("textures/lightbrick.png");
+		lightBrickTex->SetMagFilter(MagFilter::Nearest);
+		lightBrickTex->SetMinFilter(MinFilter::Nearest);
+		Texture2D::Sptr    darkBrickTex = ResourceManager::CreateAsset<Texture2D>("textures/darkbrick.png");
+		darkBrickTex->SetMagFilter(MagFilter::Nearest);
+		darkBrickTex->SetMinFilter(MinFilter::Nearest);
 
 		Texture2DArray::Sptr particleTex = ResourceManager::CreateAsset<Texture2DArray>("textures/particles.png", 2, 2);
 
@@ -193,6 +205,21 @@ void DefaultSceneLayer::_CreateScene()
 			boxMaterial->Set("u_Material.Shininess", 0.5f);
 		}
 
+		Material::Sptr lightBrickMat = ResourceManager::CreateAsset<Material>(deferredForward);
+		{
+			lightBrickMat->Name = "lightBrickMat";
+			lightBrickMat->Set("u_Material.AlbedoMap", lightBrickTex);
+			lightBrickMat->Set("u_Material.NormalMap", normalMapDefault);
+			lightBrickMat->Set("u_Material.Shininess", 0.1f);
+		}
+
+		Material::Sptr darkBrickMat = ResourceManager::CreateAsset<Material>(deferredForward);
+		{
+			darkBrickMat->Name = "darkBrickMat";
+			darkBrickMat->Set("u_Material.AlbedoMap", darkBrickTex);
+			darkBrickMat->Set("u_Material.NormalMap", normalMapDefault);
+			darkBrickMat->Set("u_Material.Shininess", 0.1f);
+		}
 #pragma endregion
 #pragma region Lighting
 		// Create some lights for our scene
@@ -201,8 +228,8 @@ void DefaultSceneLayer::_CreateScene()
 
 		Light::Sptr lightComponent = light->Add<Light>();
 		lightComponent->SetColor(glm::linearRand(glm::vec3(0.0f), glm::vec3(1.0f)));
-		lightComponent->SetRadius(glm::linearRand(0.1f, 10.0f));
-		lightComponent->SetIntensity(glm::linearRand(1.0f, 2.0f));
+		lightComponent->SetRadius(100000000.f);
+		lightComponent->SetIntensity(10000000.f);
 #pragma endregion
 
 		// We'll create a mesh that is a simple plane that we can resize later
@@ -263,6 +290,48 @@ void DefaultSceneLayer::_CreateScene()
 
 			//player movement
 			CharacterController::Sptr movement = monkey1->Add<CharacterController>();
+		}
+
+		GameObject::Sptr lightBricks = scene->CreateGameObject("Stage");
+		{
+			// Set position in the scene
+			lightBricks->SetPostion(glm::vec3(0.f, 0.0f, 5.0f));
+			lightBricks->SetScale({ 0.1,0.1,0.1 });
+			lightBricks->SetRotation({ 90,0,-90 });
+
+
+			// Create and attach a renderer for the monkey
+			RenderComponent::Sptr renderer = lightBricks->Add<RenderComponent>();
+			renderer->SetMesh(lightBrickMesh);
+			renderer->SetMaterial(lightBrickMat);
+		}
+
+		GameObject::Sptr darkBricks = scene->CreateGameObject("Stage Bricks (Dark)");
+		{
+			// Set position in the scene
+			darkBricks->SetPostion(glm::vec3(0.f, 0.0f, 0.0f));
+
+
+			// Create and attach a renderer for the monkey
+			RenderComponent::Sptr renderer = darkBricks->Add<RenderComponent>();
+			renderer->SetMesh(darkBrickMesh);
+			renderer->SetMaterial(darkBrickMat);
+
+			lightBricks->AddChild(darkBricks);
+		}
+
+		GameObject::Sptr platform = scene->CreateGameObject("Stage Platform");
+		{
+			// Set position in the scene
+			platform->SetPostion(glm::vec3(0.f, 0.0f, 0.0f));
+
+
+			// Create and attach a renderer for the monkey
+			RenderComponent::Sptr renderer = platform->Add<RenderComponent>();
+			renderer->SetMesh(platformMesh);
+			renderer->SetMaterial(lightBrickMat);
+
+			lightBricks->AddChild(platform);
 		}
 
 		{
