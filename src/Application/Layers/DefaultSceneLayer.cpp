@@ -541,8 +541,8 @@ void DefaultSceneLayer::_CreateScene()
 
 			//death trigger
 			TriggerVolume::Sptr trigger = Knight->Add<TriggerVolume>();
-			SphereCollider::Sptr collider = SphereCollider::Create(1.f);
-			trigger->AddCollider(collider);
+			SphereCollider::Sptr coll = SphereCollider::Create(1.f);
+			trigger->AddCollider(coll);
 			EndGameTrigger::Sptr deathCondition = Knight->Add<EndGameTrigger>();
 			deathCondition->SetMat(loseMat);
 		}

@@ -14,7 +14,7 @@ void EndGameTrigger::OnTriggerVolumeEntered(const std::shared_ptr<Gameplay::Phys
 	if (body->GetGameObject()->Name == "Link") {
 		(GetGameObject()->GetScene()->FindObjectByName("Feedback Plane"))->Get<RenderComponent>()->SetMaterial(mat);
 		(GetGameObject()->GetScene()->FindObjectByName("Feedback Plane"))->SetRotation(glm::vec3(90.f, 0.f, 0.f));
-		(GetGameObject()->GetScene()->FindObjectByName("Feedback Plane"))->SetPostion( glm::vec3(0, 1.f, 1.8f)
+		(GetGameObject()->GetScene()->FindObjectByName("Feedback Plane"))->SetPostion(glm::vec3(0, 1.f, 1.8f));
 	}
 	
 	
