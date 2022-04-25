@@ -343,6 +343,7 @@
       <Filter>Utils\Windows</Filter>
     </ClInclude>
     <ClInclude Include="src\Application\Layers\PostProcessing\nightVision.h" />
+    <ClInclude Include="src\Gameplay\Components\CharacterController.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Application\Application.cpp">
@@ -592,6 +593,7 @@
       <Filter>Utils\Windows</Filter>
     </ClCompile>
     <ClCompile Include="src\entry_point.cpp" />
+    <ClCompile Include="src\Gameplay\Components\CharacterController.cpp" />
     <ClCompile Include="src\Application\Layers\PostProcessing\nightVision.cpp" />
   </ItemGroup>
   <ItemGroup>

@@ -50,6 +50,8 @@
 #include "Gameplay/Components/TriggerVolumeEnterBehaviour.h"
 #include "Gameplay/Components/SimpleCameraControl.h"
 
+#include "Gameplay/Components/CharacterController.h"
+
 // Physics
 #include "Gameplay/Physics/RigidBody.h"
 #include "Gameplay/Physics/Colliders/BoxCollider.h"
@@ -114,6 +116,7 @@ void DefaultSceneLayer::_CreateScene()
 
 		// Load in some textures
 		Texture2D::Sptr    monkeyTex    = ResourceManager::CreateAsset<Texture2D>("textures/monkey-uvMap.png");
+		Texture2D::Sptr    boxTex = ResourceManager::CreateAsset<Texture2D>("textures/box-diffuse.png");
 
 		Texture2DArray::Sptr particleTex = ResourceManager::CreateAsset<Texture2DArray>("textures/particles.png", 2, 2);
 
@@ -181,6 +184,15 @@ void DefaultSceneLayer::_CreateScene()
 			monkeyMaterial->Set("u_Material.Shininess", 0.5f);
 		}
 
+		// This will be the reflective material, we'll make the whole thing 90% reflective
+		Material::Sptr boxMaterial = ResourceManager::CreateAsset<Material>(deferredForward);
+		{
+			monkeyMaterial->Name = "BoxMat";
+			monkeyMaterial->Set("u_Material.AlbedoMap", boxTex);
+			monkeyMaterial->Set("u_Material.NormalMap", normalMapDefault);
+			monkeyMaterial->Set("u_Material.Shininess", 0.5f);
+		}
+
 		// Create some lights for our scene
 		GameObject::Sptr light = scene->CreateGameObject("Light");
 		light->SetPostion(glm::vec3(glm::diskRand(25.0f), 1.0f));
@@ -210,23 +222,23 @@ void DefaultSceneLayer::_CreateScene()
 		}
 
 
-		// Set up all our sample objects
-		//GameObject::Sptr plane = scene->CreateGameObject("Plane");
-		//{
-		//	// Make a big tiled mesh
-		//	MeshResource::Sptr tiledMesh = ResourceManager::CreateAsset<MeshResource>();
-		//	tiledMesh->AddParam(MeshBuilderParam::CreatePlane(ZERO, UNIT_Z, UNIT_X, glm::vec2(100.0f), glm::vec2(20.0f)));
-		//	tiledMesh->GenerateMesh();
+		 //Set up all our sample objects
+		GameObject::Sptr plane = scene->CreateGameObject("Plane");
+		{
+			// Make a big tiled mesh
+			MeshResource::Sptr tiledMesh = ResourceManager::CreateAsset<MeshResource>();
+			tiledMesh->AddParam(MeshBuilderParam::CreatePlane(ZERO, UNIT_Z, UNIT_X, glm::vec2(100.0f), glm::vec2(20.0f)));
+			tiledMesh->GenerateMesh();
 
-		//	// Create and attach a RenderComponent to the object to draw our mesh
-		//	RenderComponent::Sptr renderer = plane->Add<RenderComponent>();
-		//	renderer->SetMesh(tiledMesh);
-		//	renderer->SetMaterial(boxMaterial);
+			// Create and attach a RenderComponent to the object to draw our mesh
+			RenderComponent::Sptr renderer = plane->Add<RenderComponent>();
+			renderer->SetMesh(tiledMesh);
+			renderer->SetMaterial(boxMaterial);
 
-		//	// Attach a plane collider that extends infinitely along the X/Y axis
-		//	RigidBody::Sptr physics = plane->Add<RigidBody>(/*static by default*/);
-		//	physics->AddCollider(BoxCollider::Create(glm::vec3(50.0f, 50.0f, 1.0f)))->SetPosition({ 0,0,-1 });
-		//}
+			// Attach a plane collider that extends infinitely along the X/Y axis
+			RigidBody::Sptr physics = plane->Add<RigidBody>(/*static by default*/);
+			physics->AddCollider(BoxCollider::Create(glm::vec3(50.0f, 50.0f, 1.0f)))->SetPosition({ 0,0,-1 });
+		}
 
 		
 
@@ -241,6 +253,11 @@ void DefaultSceneLayer::_CreateScene()
 			renderer->SetMesh(monkeyMesh);
 			renderer->SetMaterial(monkeyMaterial);
 
+			RigidBody::Sptr physics = monkey1->Add<RigidBody>(RigidBodyType::Dynamic);
+			physics->AddCollider(BoxCollider::Create(glm::vec3(1.f)));
+
+			//player movement
+			CharacterController::Sptr movement = monkey1->Add<CharacterController>();
 		}
 
 		{
