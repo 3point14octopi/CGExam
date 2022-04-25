@@ -102,7 +102,8 @@ void DefaultSceneLayer::_CreateScene()
 	if (loadScene && std::filesystem::exists("scene.json")) {
 		app.LoadScene("scene.json");
 	} else {
-		 
+#pragma region Shaders
+
 		// Basic gbuffer generation with no vertex manipulation
 		ShaderProgram::Sptr deferredForward = ResourceManager::CreateAsset<ShaderProgram>(std::unordered_map<ShaderPartType, std::string>{
 			{ ShaderPartType::Vertex, "shaders/vertex_shaders/basic.glsl" },
@@ -110,45 +111,27 @@ void DefaultSceneLayer::_CreateScene()
 		});
 		deferredForward->SetDebugName("Deferred - GBuffer Generation");
 
+#pragma endregion
+#pragma region LoadMeshes
 
 		// Load in the meshes
 		MeshResource::Sptr monkeyMesh = ResourceManager::CreateAsset<MeshResource>("Models/Monkey.obj");
 
+#pragma endregion
+#pragma region LoadTextures
 		// Load in some textures
 		Texture2D::Sptr    monkeyTex    = ResourceManager::CreateAsset<Texture2D>("textures/monkey-uvMap.png");
 		Texture2D::Sptr    boxTex = ResourceManager::CreateAsset<Texture2D>("textures/box-diffuse.png");
 
 		Texture2DArray::Sptr particleTex = ResourceManager::CreateAsset<Texture2DArray>("textures/particles.png", 2, 2);
 
+#pragma endregion
+
 		//DebugWindow::Sptr debugWindow = app.GetLayer<ImGuiDebugLayer>()->GetWindow<DebugWindow>();
+		// Create an empty scene
+		Scene::Sptr scene = std::make_shared<Scene>();  
 
-#pragma region Basic Texture Creation
-		Texture2DDescription singlePixelDescriptor;
-		singlePixelDescriptor.Width = singlePixelDescriptor.Height = 1;
-		singlePixelDescriptor.Format = InternalFormat::RGB8;
-
-		float normalMapDefaultData[3] = { 0.5f, 0.5f, 1.0f };
-		Texture2D::Sptr normalMapDefault = ResourceManager::CreateAsset<Texture2D>(singlePixelDescriptor);
-		normalMapDefault->LoadData(1, 1, PixelFormat::RGB, PixelType::Float, normalMapDefaultData);
-
-		float solidGrey[3] = { 0.5f, 0.5f, 0.5f };
-		float solidBlack[3] = { 0.0f, 0.0f, 0.0f };
-		float solidWhite[3] = { 1.0f, 1.0f, 1.0f };
-
-		Texture2D::Sptr solidBlackTex = ResourceManager::CreateAsset<Texture2D>(singlePixelDescriptor);
-		solidBlackTex->LoadData(1, 1, PixelFormat::RGB, PixelType::Float, solidBlack);
-
-		Texture2D::Sptr solidGreyTex = ResourceManager::CreateAsset<Texture2D>(singlePixelDescriptor);
-		solidGreyTex->LoadData(1, 1, PixelFormat::RGB, PixelType::Float, solidGrey);
-
-		Texture2D::Sptr solidWhiteTex = ResourceManager::CreateAsset<Texture2D>(singlePixelDescriptor);
-		solidWhiteTex->LoadData(1, 1, PixelFormat::RGB, PixelType::Float, solidWhite);
-
-#pragma endregion 
-
-		// Loading in a 1D LUT
-		Texture1D::Sptr toonLut = ResourceManager::CreateAsset<Texture1D>("luts/toon-1D.png"); 
-		toonLut->SetWrap(WrapMode::ClampToEdge);
+#pragma region Skybox Shit
 
 		// Here we'll load in the cubemap, as well as a special shader to handle drawing the skybox
 		TextureCube::Sptr testCubemap = ResourceManager::CreateAsset<TextureCube>("cubemaps/ocean/ocean.jpg");
@@ -157,20 +140,27 @@ void DefaultSceneLayer::_CreateScene()
 			{ ShaderPartType::Fragment, "shaders/fragment_shaders/skybox_frag.glsl" } 
 		});
 		  
-		// Create an empty scene
-		Scene::Sptr scene = std::make_shared<Scene>();  
-
 		// Setting up our enviroment map
 		scene->SetSkyboxTexture(testCubemap); 
 		scene->SetSkyboxShader(skyboxShader);
 		// Since the skybox I used was for Y-up, we need to rotate it 90 deg around the X-axis to convert it to z-up 
 		scene->SetSkyboxRotation(glm::rotate(MAT4_IDENTITY, glm::half_pi<float>(), glm::vec3(1.0f, 0.0f, 0.0f)));
 
+#pragma endregion
+#pragma region LoadLUTS
+
+		// Loading in a 1D LUT
+		Texture1D::Sptr toonLut = ResourceManager::CreateAsset<Texture1D>("luts/toon-1D.png"); 
+		toonLut->SetWrap(WrapMode::ClampToEdge);
+
 		// Loading in a color lookup table
-		Texture3D::Sptr lut = ResourceManager::CreateAsset<Texture3D>("luts/cool.CUBE");   
+		Texture3D::Sptr lut = ResourceManager::CreateAsset<Texture3D>("luts/cool.CUBE");
 
 		// Configure the color correction LUT
 		scene->SetColorLUT(lut);
+
+#pragma endregion
+#pragma region Materials
 
 		// Create our materials
 		
@@ -188,11 +178,13 @@ void DefaultSceneLayer::_CreateScene()
 		Material::Sptr boxMaterial = ResourceManager::CreateAsset<Material>(deferredForward);
 		{
 			monkeyMaterial->Name = "BoxMat";
-			monkeyMaterial->Set("u_Material.AlbedoMap", boxTex);
+			monkeyMaterial->Set("u_Material.AlbedoMap", SmileyTex);
 			monkeyMaterial->Set("u_Material.NormalMap", normalMapDefault);
 			monkeyMaterial->Set("u_Material.Shininess", 0.5f);
 		}
 
+#pragma endregion
+#pragma region Lighting
 		// Create some lights for our scene
 		GameObject::Sptr light = scene->CreateGameObject("Light");
 		light->SetPostion(glm::vec3(glm::diskRand(25.0f), 1.0f));
@@ -201,11 +193,14 @@ void DefaultSceneLayer::_CreateScene()
 		lightComponent->SetColor(glm::linearRand(glm::vec3(0.0f), glm::vec3(1.0f)));
 		lightComponent->SetRadius(glm::linearRand(0.1f, 10.0f));
 		lightComponent->SetIntensity(glm::linearRand(1.0f, 2.0f));
+#pragma endregion
 
 		// We'll create a mesh that is a simple plane that we can resize later
 		MeshResource::Sptr planeMesh = ResourceManager::CreateAsset<MeshResource>();
 		planeMesh->AddParam(MeshBuilderParam::CreatePlane(ZERO, UNIT_Z, UNIT_X, glm::vec2(1.0f)));
 		planeMesh->GenerateMesh();
+
+#pragma region GameObjects
 
 		// Set up the scene's camera
 		GameObject::Sptr camera = scene->MainCamera->GetGameObject()->SelfRef();
@@ -352,13 +347,7 @@ void DefaultSceneLayer::_CreateScene()
 			ShadowCamera::Sptr shadowCam = shadowCaster->Add<ShadowCamera>();
 			shadowCam->SetProjection(glm::perspective(glm::radians(120.0f), 1.0f, 0.1f, 100.0f));
 		}
-
-	
-		
-		
-		
-
-	
+#pragma endregion
 
 		GuiBatcher::SetDefaultTexture(ResourceManager::CreateAsset<Texture2D>("textures/ui-sprite.png"));
 		GuiBatcher::SetDefaultBorderRadius(8);

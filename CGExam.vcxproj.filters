@@ -96,6 +96,9 @@
     <ClInclude Include="src\Application\Layers\PostProcessing\Pixelation.h">
       <Filter>Application\Layers\PostProcessing</Filter>
     </ClInclude>
+    <ClInclude Include="src\Application\Layers\PostProcessing\nightVision.h">
+      <Filter>Application\Layers\PostProcessing</Filter>
+    </ClInclude>
     <ClInclude Include="src\Application\Layers\PostProcessingLayer.h">
       <Filter>Application\Layers</Filter>
     </ClInclude>
@@ -388,6 +391,9 @@
     <ClCompile Include="src\Application\Layers\PostProcessing\Pixelation.cpp">
       <Filter>Application\Layers\PostProcessing</Filter>
     </ClCompile>
+    <ClCompile Include="src\Application\Layers\PostProcessing\nightVision.cpp">
+      <Filter>Application\Layers\PostProcessing</Filter>
+    </ClCompile>
     <ClCompile Include="src\Application\Layers\PostProcessingLayer.cpp">
       <Filter>Application\Layers</Filter>
     </ClCompile>
@@ -595,8 +601,5 @@
     <ClCompile Include="src\entry_point.cpp" />
     <ClCompile Include="src\Gameplay\Components\CharacterController.cpp" />
     <ClCompile Include="src\Application\Layers\PostProcessing\nightVision.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="res\shaders\fragment_shaders\post_effects\nightVision.glsl" />
   </ItemGroup>
 </Project>
