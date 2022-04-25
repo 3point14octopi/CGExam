@@ -124,6 +124,7 @@
     <ClInclude Include="src\Application\Layers\PostProcessing\ColorCorrectionEffect.h" />
     <ClInclude Include="src\Application\Layers\PostProcessing\DepthOfField.h" />
     <ClInclude Include="src\Application\Layers\PostProcessing\OutlineEffect.h" />
+    <ClInclude Include="src\Application\Layers\PostProcessing\Pixelation.h" />
     <ClInclude Include="src\Application\Layers\PostProcessingLayer.h" />
     <ClInclude Include="src\Application\Layers\RenderLayer.h" />
     <ClInclude Include="src\Application\Timing.h" />
@@ -221,6 +222,7 @@
     <ClCompile Include="src\Application\Layers\PostProcessing\ColorCorrectionEffect.cpp" />
     <ClCompile Include="src\Application\Layers\PostProcessing\DepthOfField.cpp" />
     <ClCompile Include="src\Application\Layers\PostProcessing\OutlineEffect.cpp" />
+    <ClCompile Include="src\Application\Layers\PostProcessing\Pixelation.cpp" />
     <ClCompile Include="src\Application\Layers\PostProcessingLayer.cpp" />
     <ClCompile Include="src\Application\Layers\RenderLayer.cpp" />
     <ClCompile Include="src\Application\Windows\DebugWindow.cpp" />
