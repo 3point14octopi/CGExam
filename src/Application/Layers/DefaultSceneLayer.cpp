@@ -323,7 +323,7 @@ void DefaultSceneLayer::_CreateScene()
 		GameObject::Sptr platform = scene->CreateGameObject("Stage Platform");
 		{
 			// Set position in the scene
-			platform->SetPostion(glm::vec3(0.f, 0.0f, 0.0f));
+			platform->SetPostion(glm::vec3(0.f, 8.0f, -16.0f));
 
 
 			// Create and attach a renderer for the monkey
