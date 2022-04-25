@@ -119,9 +119,19 @@ void DefaultSceneLayer::_CreateScene()
 
 #pragma endregion
 #pragma region LoadTextures
+#pragma region Normal Map
+		Texture2DDescription singlePixelDescriptor;
+		singlePixelDescriptor.Width = singlePixelDescriptor.Height = 1;
+		singlePixelDescriptor.Format = InternalFormat::RGB8;
+		float normalMapDefaultData[3] = { 0.5f, 0.5f, 1.0f };
+		Texture2D::Sptr normalMapDefault = ResourceManager::CreateAsset<Texture2D>(singlePixelDescriptor);
+		normalMapDefault->LoadData(1, 1, PixelFormat::RGB, PixelType::Float, normalMapDefaultData);
+#pragma endregion
+
 		// Load in some textures
 		Texture2D::Sptr    monkeyTex    = ResourceManager::CreateAsset<Texture2D>("textures/monkey-uvMap.png");
 		Texture2D::Sptr    boxTex = ResourceManager::CreateAsset<Texture2D>("textures/box-diffuse.png");
+		Texture2D::Sptr    smileyTex = ResourceManager::CreateAsset<Texture2D>("textures/light_projection.png");
 
 		Texture2DArray::Sptr particleTex = ResourceManager::CreateAsset<Texture2DArray>("textures/particles.png", 2, 2);
 
@@ -177,10 +187,10 @@ void DefaultSceneLayer::_CreateScene()
 		// This will be the reflective material, we'll make the whole thing 90% reflective
 		Material::Sptr boxMaterial = ResourceManager::CreateAsset<Material>(deferredForward);
 		{
-			monkeyMaterial->Name = "BoxMat";
-			monkeyMaterial->Set("u_Material.AlbedoMap", SmileyTex);
-			monkeyMaterial->Set("u_Material.NormalMap", normalMapDefault);
-			monkeyMaterial->Set("u_Material.Shininess", 0.5f);
+			boxMaterial->Name = "BoxMat";
+			boxMaterial->Set("u_Material.AlbedoMap", smileyTex);
+			boxMaterial->Set("u_Material.NormalMap", normalMapDefault);
+			boxMaterial->Set("u_Material.Shininess", 0.5f);
 		}
 
 #pragma endregion
