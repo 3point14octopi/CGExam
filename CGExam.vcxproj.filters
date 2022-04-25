@@ -342,6 +342,7 @@
     <ClInclude Include="src\Utils\Windows\FileDialogs.h">
       <Filter>Utils\Windows</Filter>
     </ClInclude>
+    <ClInclude Include="src\Application\Layers\PostProcessing\nightVision.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Application\Application.cpp">
@@ -591,6 +592,7 @@
       <Filter>Utils\Windows</Filter>
     </ClCompile>
     <ClCompile Include="src\entry_point.cpp" />
+    <ClCompile Include="src\Application\Layers\PostProcessing\nightVision.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shaders\fragment_shaders\post_effects\nightVision.glsl" />
