@@ -592,4 +592,7 @@
     </ClCompile>
     <ClCompile Include="src\entry_point.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="res\shaders\fragment_shaders\post_effects\nightVision.glsl" />
+  </ItemGroup>
 </Project>
