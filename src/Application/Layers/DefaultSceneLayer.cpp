@@ -51,6 +51,7 @@
 #include "Gameplay/Components/SimpleCameraControl.h"
 
 #include "Gameplay/Components/CharacterController.h"
+#include "Gameplay/Components/EnemyController.h"
 
 // Physics
 #include "Gameplay/Physics/RigidBody.h"
@@ -247,22 +248,40 @@ void DefaultSceneLayer::_CreateScene()
 
 		
 
-		GameObject::Sptr monkey1 = scene->CreateGameObject("Monkey 1");
+		GameObject::Sptr Link = scene->CreateGameObject("Link");
 		{
 			// Set position in the scene
-			monkey1->SetPostion(glm::vec3(1.5f, 0.0f, 1.0f));
+			Link->SetPostion(glm::vec3(1.5f, 0.0f, 1.0f));
 
 
 			// Create and attach a renderer for the monkey
-			RenderComponent::Sptr renderer = monkey1->Add<RenderComponent>();
+			RenderComponent::Sptr renderer = Link->Add<RenderComponent>();
 			renderer->SetMesh(monkeyMesh);
 			renderer->SetMaterial(monkeyMaterial);
 
-			RigidBody::Sptr physics = monkey1->Add<RigidBody>(RigidBodyType::Dynamic);
+			RigidBody::Sptr physics = Link->Add<RigidBody>(RigidBodyType::Dynamic);
 			physics->AddCollider(BoxCollider::Create(glm::vec3(1.f)));
 
 			//player movement
-			CharacterController::Sptr movement = monkey1->Add<CharacterController>();
+			CharacterController::Sptr movement = Link->Add<CharacterController>();
+		}
+
+		GameObject::Sptr Knight = scene->CreateGameObject("Monkey 2");
+		{
+			// Set position in the scene
+			Knight->SetPostion(glm::vec3(4.5f, 0.0f, 1.0f));
+
+
+			// Create and attach a renderer for the Knight
+			RenderComponent::Sptr renderer = Knight->Add<RenderComponent>();
+			renderer->SetMesh(monkeyMesh);
+			renderer->SetMaterial(monkeyMaterial);
+
+			RigidBody::Sptr physics = Knight->Add<RigidBody>(RigidBodyType::Dynamic);
+			physics->AddCollider(BoxCollider::Create(glm::vec3(1.f)));
+
+			//enemy movement
+			EnemyController::Sptr movement = Knight->Add<EnemyController>();
 		}
 
 		{
