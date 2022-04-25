@@ -92,10 +92,10 @@ struct RasterizerState {
 		glPolygonMode(GL_FRONT, *FrontFaceFill);
 		glPolygonMode(GL_BACK, *BackFaceFill);
 		if (CullMode != CullMode::None) {
-			glEnable(GL_CULL_FACE);
+			//glEnable(GL_CULL_FACE);
 			glCullFace(*CullMode);
 		} else {
-			glDisable(GL_CULL_FACE);
+			//glDisable(GL_CULL_FACE);
 		}
 	}
 };

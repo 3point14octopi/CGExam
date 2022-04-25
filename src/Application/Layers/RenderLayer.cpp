@@ -98,7 +98,7 @@ void RenderLayer::OnRender(const Framebuffer::Sptr& prevLayer)
 	
 	// Make sure depth testing and culling are re-enabled
 	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_CULL_FACE); 
+	//glEnable(GL_CULL_FACE); 
 	glDepthMask(true); 
 
 	// Disable blending, we want to override any existing colors

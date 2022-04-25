@@ -124,6 +124,15 @@ void DefaultSceneLayer::_CreateScene()
 		MeshResource::Sptr lightBrickMesh = ResourceManager::CreateAsset<MeshResource>("Models/LightBricks.obj");
 		MeshResource::Sptr platformMesh = ResourceManager::CreateAsset<MeshResource>("Models/Platform.obj");
 
+		//Link
+		MeshResource::Sptr m_clHands = ResourceManager::CreateAsset<MeshResource>("Models/Link/clHands.obj");
+		MeshResource::Sptr m_ears = ResourceManager::CreateAsset<MeshResource>("Models/Link/ears.obj");
+		MeshResource::Sptr m_hair = ResourceManager::CreateAsset<MeshResource>("Models/Link/hair.obj");
+		MeshResource::Sptr m_headh = ResourceManager::CreateAsset<MeshResource>("Models/Link/headh.obj");
+		MeshResource::Sptr m_headl = ResourceManager::CreateAsset<MeshResource>("Models/Link/headL.obj");
+		MeshResource::Sptr m_shield = ResourceManager::CreateAsset<MeshResource>("Models/Link/Shield.obj");
+		MeshResource::Sptr m_sword = ResourceManager::CreateAsset<MeshResource>("Models/Link/Sword.obj");
+
 #pragma endregion
 #pragma region LoadTextures
 #pragma region Normal Map
@@ -133,6 +142,7 @@ void DefaultSceneLayer::_CreateScene()
 		float normalMapDefaultData[3] = { 0.5f, 0.5f, 1.0f };
 		Texture2D::Sptr normalMapDefault = ResourceManager::CreateAsset<Texture2D>(singlePixelDescriptor);
 		normalMapDefault->LoadData(1, 1, PixelFormat::RGB, PixelType::Float, normalMapDefaultData);
+
 #pragma endregion
 
 		// Load in some textures
@@ -147,6 +157,17 @@ void DefaultSceneLayer::_CreateScene()
 		darkBrickTex->SetMinFilter(MinFilter::NearestMipNearest);
 
 		Texture2DArray::Sptr particleTex = ResourceManager::CreateAsset<Texture2DArray>("textures/particles.png", 2, 2);
+
+		//Link
+		Texture2D::Sptr    t_clHands = ResourceManager::CreateAsset<Texture2D>("Models/Link/ClHands.png");
+		Texture2D::Sptr    t_ears = ResourceManager::CreateAsset<Texture2D>("Models/Link/ears.png");
+		Texture2D::Sptr    t_hair = ResourceManager::CreateAsset<Texture2D>("Models/Link/hair.png");
+		Texture2D::Sptr    t_headh = ResourceManager::CreateAsset<Texture2D>("Models/Link/headh.png");
+		Texture2D::Sptr    t_headl = ResourceManager::CreateAsset<Texture2D>("Models/Link/headl.png");
+		Texture2D::Sptr    t_shield = ResourceManager::CreateAsset<Texture2D>("Models/Link/shield.png");
+		Texture2D::Sptr    n_shield = ResourceManager::CreateAsset<Texture2D>("Models/Link/shieldn.png");
+		Texture2D::Sptr    t_sword = ResourceManager::CreateAsset<Texture2D>("Models/Link/sword.png");
+		Texture2D::Sptr    n_sword = ResourceManager::CreateAsset<Texture2D>("Models/Link/swordn.png");
 
 #pragma endregion
 
@@ -211,7 +232,7 @@ void DefaultSceneLayer::_CreateScene()
 			lightBrickMat->Name = "lightBrickMat";
 			lightBrickMat->Set("u_Material.AlbedoMap", lightBrickTex);
 			lightBrickMat->Set("u_Material.NormalMap", normalMapDefault);
-			lightBrickMat->Set("u_Material.Shininess", 0.5f);
+			lightBrickMat->Set("u_Material.Shininess", 0.0f);
 		}
 
 		Material::Sptr darkBrickMat = ResourceManager::CreateAsset<Material>(deferredForward);
@@ -219,8 +240,65 @@ void DefaultSceneLayer::_CreateScene()
 			darkBrickMat->Name = "darkBrickMat";
 			darkBrickMat->Set("u_Material.AlbedoMap", darkBrickTex);
 			darkBrickMat->Set("u_Material.NormalMap", normalMapDefault);
-			darkBrickMat->Set("u_Material.Shininess", 0.5f);
+			darkBrickMat->Set("u_Material.Shininess", 0.0f);
 		}
+
+		Material::Sptr matClHands = ResourceManager::CreateAsset<Material>(deferredForward);
+		{
+			matClHands->Name = "clhands";
+			matClHands->Set("u_Material.AlbedoMap", t_clHands);
+			matClHands->Set("u_Material.NormalMap", normalMapDefault);
+			matClHands->Set("u_Material.Shininess", 0.0f);
+		}
+
+		Material::Sptr matEars = ResourceManager::CreateAsset<Material>(deferredForward);
+		{
+			matEars->Name = "ears";
+			matEars->Set("u_Material.AlbedoMap", t_ears);
+			matEars->Set("u_Material.NormalMap", normalMapDefault);
+			matEars->Set("u_Material.Shininess", 0.0f);
+		}
+
+		Material::Sptr matHair = ResourceManager::CreateAsset<Material>(deferredForward);
+		{
+			matHair->Name = "hair";
+			matHair->Set("u_Material.AlbedoMap", t_hair);
+			matHair->Set("u_Material.NormalMap", normalMapDefault);
+			matHair->Set("u_Material.Shininess", 0.0f);
+		}
+
+		Material::Sptr matHeadh = ResourceManager::CreateAsset<Material>(deferredForward);
+		{
+			matHeadh->Name = "eyes";
+			matHeadh->Set("u_Material.AlbedoMap", t_headh);
+			matHeadh->Set("u_Material.NormalMap", normalMapDefault);
+			matHeadh->Set("u_Material.Shininess", 0.0f);
+		}
+
+		Material::Sptr matheadl = ResourceManager::CreateAsset<Material>(deferredForward);
+		{
+			matheadl->Name = "mouth";
+			matheadl->Set("u_Material.AlbedoMap", t_headl);
+			matheadl->Set("u_Material.NormalMap", normalMapDefault);
+			matheadl->Set("u_Material.Shininess", 0.0f);
+		}
+
+		Material::Sptr matshield = ResourceManager::CreateAsset<Material>(deferredForward);
+		{
+			matshield->Name = "shyield";
+			matshield->Set("u_Material.AlbedoMap", t_shield);
+			matshield->Set("u_Material.NormalMap", n_shield);
+			matshield->Set("u_Material.Shininess", 1.0f);
+		}
+
+		Material::Sptr matSword = ResourceManager::CreateAsset<Material>(deferredForward);
+		{
+			matSword->Name = "Sword";
+			matSword->Set("u_Material.AlbedoMap", t_sword);
+			matSword->Set("u_Material.NormalMap", n_sword);
+			matSword->Set("u_Material.Shininess", 1.0f);
+		}
+
 #pragma endregion
 #pragma region Lighting
 		// Create some lights for our scene
@@ -282,9 +360,9 @@ void DefaultSceneLayer::_CreateScene()
 
 
 			// Create and attach a renderer for the monkey
-			RenderComponent::Sptr renderer = Link->Add<RenderComponent>();
+			/*RenderComponent::Sptr renderer = Link->Add<RenderComponent>();
 			renderer->SetMesh(monkeyMesh);
-			renderer->SetMaterial(monkeyMaterial);
+			renderer->SetMaterial(monkeyMaterial);*/
 
 			RigidBody::Sptr physics = Link->Add<RigidBody>(RigidBodyType::Dynamic);
 			physics->AddCollider(BoxCollider::Create(glm::vec3(1.f)));
@@ -292,6 +370,116 @@ void DefaultSceneLayer::_CreateScene()
 			//player movement
 			CharacterController::Sptr movement = Link->Add<CharacterController>();
 		}
+
+#pragma region LinkModel
+		GameObject::Sptr o_clhands = scene->CreateGameObject("clhands");
+		{
+			// Set position in the scene
+			o_clhands->SetPostion(glm::vec3(0.f, 0.0f, 0.0f));
+			o_clhands->SetScale({ 1,1,1 });
+			o_clhands->SetRotation({ 90,0,90 });
+
+
+			// Create and attach a renderer for the monkey
+			RenderComponent::Sptr renderer = o_clhands->Add<RenderComponent>();
+			renderer->SetMesh(m_clHands);
+			renderer->SetMaterial(matClHands);
+			Link->AddChild(o_clhands);
+		}
+
+		GameObject::Sptr o_ears = scene->CreateGameObject("ears");
+		{
+			// Set position in the scene
+			o_ears->SetPostion(glm::vec3(0.f, 0.0f, 0.0f));
+			o_ears->SetScale({ 1,1,1 });
+			o_ears->SetRotation({ 90,0,90 });
+
+
+			// Create and attach a renderer for the monkey
+			RenderComponent::Sptr renderer = o_ears->Add<RenderComponent>();
+			renderer->SetMesh(m_ears);
+			renderer->SetMaterial(matEars);
+			Link->AddChild(o_ears);
+		}
+
+		GameObject::Sptr o_hair = scene->CreateGameObject("hair");
+		{
+			// Set position in the scene
+			o_hair->SetPostion(glm::vec3(0.f, 0.0f, 0.0f));
+			o_hair->SetScale({ 1,1,1 });
+			o_hair->SetRotation({ 90,0,90 });
+
+
+			// Create and attach a renderer for the monkey
+			RenderComponent::Sptr renderer = o_hair->Add<RenderComponent>();
+			renderer->SetMesh(m_hair);
+			renderer->SetMaterial(matHair);
+			Link->AddChild(o_hair);
+		}
+
+		GameObject::Sptr o_headh = scene->CreateGameObject("eyes");
+		{
+			// Set position in the scene
+			o_headh->SetPostion(glm::vec3(0.f, 0.0f, 0.0f));
+			o_headh->SetScale({ 1,1,1 });
+			o_headh->SetRotation({ 90,0,90 });
+
+
+			// Create and attach a renderer for the monkey
+			RenderComponent::Sptr renderer = o_headh->Add<RenderComponent>();
+			renderer->SetMesh(m_headh);
+			renderer->SetMaterial(matHeadh);
+			Link->AddChild(o_headh);
+		}
+
+		GameObject::Sptr o_headl = scene->CreateGameObject("mouth");
+		{
+			// Set position in the scene
+			o_headl->SetPostion(glm::vec3(0.f, 0.0f, 0.0f));
+			o_headl->SetScale({ 1,1,1 });
+			o_headl->SetRotation({ 90,0,90 });
+
+
+			// Create and attach a renderer for the monkey
+			RenderComponent::Sptr renderer = o_headl->Add<RenderComponent>();
+			renderer->SetMesh(m_headl);
+			renderer->SetMaterial(matheadl);
+			Link->AddChild(o_headl);
+		}
+
+		GameObject::Sptr o_shield = scene->CreateGameObject("shield");
+		{
+			// Set position in the scene
+			o_shield->SetPostion(glm::vec3(0.f, 0.0f, 0.0f));
+			o_shield->SetScale({ 1,1,1 });
+			o_shield->SetRotation({ 90,0,90 });
+
+
+			// Create and attach a renderer for the monkey
+			RenderComponent::Sptr renderer = o_shield->Add<RenderComponent>();
+			renderer->SetMesh(m_shield);
+			renderer->SetMaterial(matshield);
+			Link->AddChild(o_shield);
+		}
+
+		GameObject::Sptr o_sword = scene->CreateGameObject("sword");
+		{
+			// Set position in the scene
+			o_sword->SetPostion(glm::vec3(0.f, 0.0f, 0.0f));
+			o_sword->SetScale({ 1,1,1 });
+			o_sword->SetRotation({ 90,0,90 });
+
+
+			// Create and attach a renderer for the monkey
+			RenderComponent::Sptr renderer = o_sword->Add<RenderComponent>();
+			renderer->SetMesh(m_sword);
+			renderer->SetMaterial(matSword);
+			Link->AddChild(o_sword);
+		}
+
+#pragma endregion
+
+
 
 		GameObject::Sptr Knight = scene->CreateGameObject("Monkey 2");
 		{
