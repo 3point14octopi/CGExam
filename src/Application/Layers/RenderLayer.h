@@ -109,6 +109,7 @@ public:
 
 	void SetRenderFlags(RenderFlags value);
 	RenderFlags GetRenderFlags() const;
+	void ToggleRenderFlag(int bitInfo);
 
 	const Framebuffer::Sptr& GetLightingBuffer() const;
 	const Framebuffer::Sptr& GetRenderOutput() const;
