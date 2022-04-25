@@ -50,6 +50,7 @@
 //new components
 #include "Gameplay/Components/CharacterController.h"
 #include "Gameplay/Components/EnemyController.h"
+#include "Gameplay/Components/EndGameTrigger.h"
 
 // GUI
 #include "Gameplay/Components/GUI/RectTransform.h"
@@ -285,6 +286,7 @@ void Application::_RegisterClasses()
 	ComponentManager::RegisterType<ShipMoveBehaviour>();
 	ComponentManager::RegisterType<CharacterController>();
 	ComponentManager::RegisterType<EnemyController>();
+	ComponentManager::RegisterType<EndGameTrigger>();
 }
 
 void Application::_Load() {

@@ -54,6 +54,7 @@
 
 #include "Gameplay/Components/CharacterController.h"
 #include "Gameplay/Components/EnemyController.h"
+#include "Gameplay/Components/EndGameTrigger.h"
 
 // Physics
 #include "Gameplay/Physics/RigidBody.h"
@@ -154,7 +155,9 @@ void DefaultSceneLayer::_CreateScene()
 		lightBrickTex->SetMinFilter(MinFilter::NearestMipNearest);
 		Texture2D::Sptr    darkBrickTex = ResourceManager::CreateAsset<Texture2D>("textures/darkbrick.png");
 		darkBrickTex->SetMagFilter(MagFilter::Nearest);
-		darkBrickTex->SetMinFilter(MinFilter::NearestMipNearest);
+		darkBrickTex->SetMinFilter(MinFilter::Nearest);
+		Texture2D::Sptr    winTex  = ResourceManager::CreateAsset<Texture2D>("textures/Win.png");
+		Texture2D::Sptr    loseTex = ResourceManager::CreateAsset<Texture2D>("textures/Lose.png");
 
 		Texture2DArray::Sptr particleTex = ResourceManager::CreateAsset<Texture2DArray>("textures/particles.png", 2, 2);
 
@@ -242,6 +245,24 @@ void DefaultSceneLayer::_CreateScene()
 			darkBrickMat->Set("u_Material.NormalMap", normalMapDefault);
 			darkBrickMat->Set("u_Material.Shininess", 0.0f);
 		}
+
+		Material::Sptr winMat = ResourceManager::CreateAsset<Material>(deferredForward);
+		{
+			winMat->Name = "winMat";
+			winMat->Set("u_Material.AlbedoMap", winTex);
+			winMat->Set("u_Material.NormalMap", normalMapDefault);
+			winMat->Set("u_Material.Shininess", 0.1f);
+		}
+
+		Material::Sptr loseMat = ResourceManager::CreateAsset<Material>(deferredForward);
+		{
+			loseMat->Name = "loseMat";
+			loseMat->Set("u_Material.AlbedoMap", loseTex);
+			loseMat->Set("u_Material.NormalMap", normalMapDefault);
+			loseMat->Set("u_Material.Shininess", 0.1f);
+		}
+
+
 
 		Material::Sptr matClHands = ResourceManager::CreateAsset<Material>(deferredForward);
 		{
@@ -354,6 +375,17 @@ void DefaultSceneLayer::_CreateScene()
 			// Attach a plane collider that extends infinitely along the X/Y axis
 			RigidBody::Sptr physics = plane->Add<RigidBody>(/*static by default*/);
 			physics->AddCollider(BoxCollider::Create(glm::vec3(50.0f, 50.0f, 1.0f)))->SetPosition({ 0,0,-1 });
+		}
+
+		GameObject::Sptr feedbackPlane = scene->CreateGameObject("Feedback Plane");
+		{
+			MeshResource::Sptr plane = ResourceManager::CreateAsset<MeshResource>();
+			plane->AddParam(MeshBuilderParam::CreatePlane(glm::vec3(0.0f, 0.0f, 0.0f), UNIT_Z, UNIT_X, glm::vec2(18.0f, 10.0f), glm::vec2(1.0f)));
+			plane->GenerateMesh();
+
+			RenderComponent::Sptr renderer = feedbackPlane->Add<RenderComponent>();
+			renderer->SetMesh(plane);
+			renderer->SetMaterial(loseMat);
 		}
 
 		
@@ -506,6 +538,13 @@ void DefaultSceneLayer::_CreateScene()
 
 			//enemy movement
 			EnemyController::Sptr movement = Knight->Add<EnemyController>();
+
+			//death trigger
+			TriggerVolume::Sptr trigger = Knight->Add<TriggerVolume>();
+			SphereCollider::Sptr collider = SphereCollider::Create(1.f);
+			trigger->AddCollider(collider);
+			EndGameTrigger::Sptr deathCondition = Knight->Add<EndGameTrigger>();
+			deathCondition->SetMat(loseMat);
 		}
 
 		GameObject::Sptr lightBricks = scene->CreateGameObject("Stage");
@@ -520,6 +559,7 @@ void DefaultSceneLayer::_CreateScene()
 			RenderComponent::Sptr renderer = lightBricks->Add<RenderComponent>();
 			renderer->SetMesh(lightBrickMesh);
 			renderer->SetMaterial(lightBrickMat);
+
 		}
 
 		GameObject::Sptr darkBricks = scene->CreateGameObject("Stage Bricks (Dark)");
@@ -548,6 +588,18 @@ void DefaultSceneLayer::_CreateScene()
 			renderer->SetMaterial(lightBrickMat);
 
 			lightBricks->AddChild(platform);
+		}
+
+		GameObject::Sptr winTrigger = scene->CreateGameObject("win trigger");
+		{
+			winTrigger->SetPostion(glm::vec3(5.0, 0.0, 1.0));
+
+			//win trigger
+			TriggerVolume::Sptr trigger = winTrigger->Add<TriggerVolume>();
+			SphereCollider::Sptr collider = SphereCollider::Create(1.f);
+			trigger->AddCollider(collider);
+			EndGameTrigger::Sptr winCondition = winTrigger->Add<EndGameTrigger>();
+			winCondition->SetMat(winMat);
 		}
 
 		{

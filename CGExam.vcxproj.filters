@@ -348,6 +348,7 @@
     <ClInclude Include="src\Application\Layers\PostProcessing\nightVision.h" />
     <ClInclude Include="src\Gameplay\Components\CharacterController.h" />
     <ClInclude Include="src\Gameplay\Components\EnemyController.h" />
+    <ClInclude Include="src\Gameplay\Components\EndGameTrigger.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Application\Application.cpp">
@@ -603,5 +604,6 @@
     <ClCompile Include="src\Gameplay\Components\CharacterController.cpp" />
     <ClCompile Include="src\Application\Layers\PostProcessing\nightVision.cpp" />
     <ClCompile Include="src\Gameplay\Components\EnemyController.cpp" />
+    <ClCompile Include="src\Gameplay\Components\EndGameTrigger.cpp" />
   </ItemGroup>
 </Project>
