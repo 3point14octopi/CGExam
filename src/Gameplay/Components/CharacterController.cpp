@@ -18,7 +18,7 @@ void CharacterController::Update(float deltaTime) {
 	xneg = InputEngine::GetKeyState(GLFW_KEY_A) == ButtonState::Down;
 
 	xVelocity = (xpos * _velMultiplier) - (xneg * _velMultiplier);
-	zVelocity = (zpos * _velMultiplier)*2.5;
+	zVelocity = (zpos * _velMultiplier)*2;
 
 	_body->SetLinearVelocity(glm::vec3(xVelocity, _body->GetLinearVelocity().y, zVelocity + _body->GetLinearVelocity().z));
 	_body->SetAngularVelocity(glm::vec3(0.f, 0.f, 0.f));

@@ -321,10 +321,15 @@ void DefaultSceneLayer::_CreateScene()
 		// Set up the scene's camera
 		GameObject::Sptr camera = scene->MainCamera->GetGameObject()->SelfRef();
 		{
-			camera->SetPostion({ -3, -1, 5 });
-			camera->LookAt(glm::vec3(0.0f));
+			scene->MainCamera->SetOrthoEnabled(true);
+			scene->MainCamera->SetOrthoVerticalScale(5);
+			camera->SetPostion({ 0, -3.7f, 1.8f });
+			camera->SetRotation({ 90,0,0 });
+			scene->MainCamera->FocalDepth = 2.1f;
+			scene->MainCamera->LensDepth = 0.65f;
+			scene->MainCamera->Aperture = 14.6f;
 
-			camera->Add<SimpleCameraControl>();
+			//camera->Add<SimpleCameraControl>();
 
 			// This is now handled by scene itself!
 			//Camera::Sptr cam = camera->Add<Camera>();
@@ -342,9 +347,9 @@ void DefaultSceneLayer::_CreateScene()
 			tiledMesh->GenerateMesh();
 
 			// Create and attach a RenderComponent to the object to draw our mesh
-			RenderComponent::Sptr renderer = plane->Add<RenderComponent>();
-			renderer->SetMesh(tiledMesh);
-			renderer->SetMaterial(boxMaterial);
+			//RenderComponent::Sptr renderer = plane->Add<RenderComponent>();
+			//renderer->SetMesh(tiledMesh);
+			//renderer->SetMaterial(boxMaterial);
 
 			// Attach a plane collider that extends infinitely along the X/Y axis
 			RigidBody::Sptr physics = plane->Add<RigidBody>(/*static by default*/);
@@ -357,6 +362,7 @@ void DefaultSceneLayer::_CreateScene()
 		{
 			// Set position in the scene
 			Link->SetPostion(glm::vec3(1.5f, 0.0f, 1.0f));
+			Link->SetScale({ 0.5,0.5,0.5 });
 
 
 			// Create and attach a renderer for the monkey
@@ -485,6 +491,7 @@ void DefaultSceneLayer::_CreateScene()
 		{
 			// Set position in the scene
 			Knight->SetPostion(glm::vec3(4.5f, 0.0f, 1.0f));
+			Knight->SetScale({ 0.5,0.5,0.5 });
 
 
 			// Create and attach a renderer for the Knight
@@ -493,7 +500,9 @@ void DefaultSceneLayer::_CreateScene()
 			renderer->SetMaterial(monkeyMaterial);
 
 			RigidBody::Sptr physics = Knight->Add<RigidBody>(RigidBodyType::Dynamic);
-			physics->AddCollider(BoxCollider::Create(glm::vec3(1.f)));
+			BoxCollider::Sptr collider = BoxCollider::Create();
+			collider->SetPosition({ 0,0,-0.6 });
+			physics->AddCollider(collider);
 
 			//enemy movement
 			EnemyController::Sptr movement = Knight->Add<EnemyController>();
@@ -502,7 +511,7 @@ void DefaultSceneLayer::_CreateScene()
 		GameObject::Sptr lightBricks = scene->CreateGameObject("Stage");
 		{
 			// Set position in the scene
-			lightBricks->SetPostion(glm::vec3(0.f, 0.0f, 5.0f));
+			lightBricks->SetPostion(glm::vec3(0.f, 0.0f, 0.92f));
 			lightBricks->SetScale({ 0.1,0.1,0.1 });
 			lightBricks->SetRotation({ 90,0,-90 });
 
