@@ -18,6 +18,26 @@ void main() {
     vec3 diffuse = texture(s_DiffuseAccumulation, inUV).rgb;
     vec3 specular = texture(s_SpecularAccumulation, inUV).rgb;
     vec4 emissive = texture(s_Emissive, inUV);
+    
+    if(IsFlagSet(FLAG_TOGGLE_AMBIENT))
+    {
+        diffuse = diffuse + vec3(-0.1f, -0.1f, -0.1f);
+    }
+
+    if(IsFlagSet(FLAG_TOGGLE_DIFFUSE))
+    {
+        diffuse = vec3(0,0,0);
+    }
+
+    if(IsFlagSet(FLAG_TOGGLE_SPECULAR))
+    {
+        specular = vec3(0,0,0);
+    }
+
+    if(IsFlagSet(FLAG_TOGGLE_SPECULAR))
+    {
+        specular = vec3(0,0,0);
+    }
 
 	outColor = vec4(albedo * (diffuse + specular + (emissive.rgb * emissive.a)), 1.0);
 }

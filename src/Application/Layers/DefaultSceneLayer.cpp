@@ -141,10 +141,10 @@ void DefaultSceneLayer::_CreateScene()
 		Texture2D::Sptr    smileyTex = ResourceManager::CreateAsset<Texture2D>("textures/light_projection.png");
 		Texture2D::Sptr    lightBrickTex = ResourceManager::CreateAsset<Texture2D>("textures/lightbrick.png");
 		lightBrickTex->SetMagFilter(MagFilter::Nearest);
-		lightBrickTex->SetMinFilter(MinFilter::Nearest);
+		lightBrickTex->SetMinFilter(MinFilter::NearestMipNearest);
 		Texture2D::Sptr    darkBrickTex = ResourceManager::CreateAsset<Texture2D>("textures/darkbrick.png");
 		darkBrickTex->SetMagFilter(MagFilter::Nearest);
-		darkBrickTex->SetMinFilter(MinFilter::Nearest);
+		darkBrickTex->SetMinFilter(MinFilter::NearestMipNearest);
 
 		Texture2DArray::Sptr particleTex = ResourceManager::CreateAsset<Texture2DArray>("textures/particles.png", 2, 2);
 
@@ -211,7 +211,7 @@ void DefaultSceneLayer::_CreateScene()
 			lightBrickMat->Name = "lightBrickMat";
 			lightBrickMat->Set("u_Material.AlbedoMap", lightBrickTex);
 			lightBrickMat->Set("u_Material.NormalMap", normalMapDefault);
-			lightBrickMat->Set("u_Material.Shininess", 0.1f);
+			lightBrickMat->Set("u_Material.Shininess", 0.5f);
 		}
 
 		Material::Sptr darkBrickMat = ResourceManager::CreateAsset<Material>(deferredForward);
@@ -219,18 +219,18 @@ void DefaultSceneLayer::_CreateScene()
 			darkBrickMat->Name = "darkBrickMat";
 			darkBrickMat->Set("u_Material.AlbedoMap", darkBrickTex);
 			darkBrickMat->Set("u_Material.NormalMap", normalMapDefault);
-			darkBrickMat->Set("u_Material.Shininess", 0.1f);
+			darkBrickMat->Set("u_Material.Shininess", 0.5f);
 		}
 #pragma endregion
 #pragma region Lighting
 		// Create some lights for our scene
 		GameObject::Sptr light = scene->CreateGameObject("Light");
-		light->SetPostion(glm::vec3(glm::diskRand(25.0f), 1.0f));
+		light->SetPostion({ 0,-7.3f,7.8f });
 
 		Light::Sptr lightComponent = light->Add<Light>();
 		lightComponent->SetColor(glm::linearRand(glm::vec3(0.0f), glm::vec3(1.0f)));
-		lightComponent->SetRadius(100000000.f);
-		lightComponent->SetIntensity(10000000.f);
+		lightComponent->SetRadius(4.5f);
+		lightComponent->SetIntensity(16.7f);
 #pragma endregion
 
 		// We'll create a mesh that is a simple plane that we can resize later

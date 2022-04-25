@@ -309,6 +309,20 @@ void Application::_Update() {
 			layer->OnUpdate();
 		}
 	}
+
+	if (InputEngine::GetKeyState(GLFW_KEY_1) == ButtonState::Pressed) {
+		GetLayer<RenderLayer>()->ToggleRenderFlag(1);
+	}
+	if (InputEngine::GetKeyState(GLFW_KEY_2) == ButtonState::Pressed) {
+		GetLayer<RenderLayer>()->ToggleRenderFlag(2);
+	}
+	if (InputEngine::GetKeyState(GLFW_KEY_3) == ButtonState::Pressed) {
+		GetLayer<RenderLayer>()->ToggleRenderFlag(3);
+	}
+	if (InputEngine::GetKeyState(GLFW_KEY_4) == ButtonState::Pressed) {
+		GetLayer<RenderLayer>()->SetRenderFlags(RenderFlags::None);
+	}
+
 }
 
 void Application::_LateUpdate() {
